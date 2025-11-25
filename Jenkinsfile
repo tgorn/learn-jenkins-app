@@ -41,12 +41,13 @@ pipeline {
                 '''
             }
         }
-        stage('e2e Testing'){
+        stage('e2e'){
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.56.1-noble'
                     reuseNode true
                 }
+            }
            steps {
                 sh '''
                     npm install -g serve
