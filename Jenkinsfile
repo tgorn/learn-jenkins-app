@@ -13,7 +13,6 @@ pipeline {
             steps {
                 echo "Using docker "
                 sh '''
-                    npm --version
                     pwd
                     ls -altr
                     node --version
