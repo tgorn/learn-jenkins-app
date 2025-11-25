@@ -40,7 +40,7 @@ pipeline {
                     npm test
                 '''
             }
-
+        }
         stage('e2e Testing'){
             agent {
                 docker {
@@ -55,7 +55,6 @@ pipeline {
                     npx playwright test
                 '''
             }
-
         }
     }
     post { 
