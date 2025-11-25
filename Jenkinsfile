@@ -24,6 +24,8 @@ pipeline {
             steps {
                 echo "With using docker "
                 sh '''
+                    ls -latr 
+                    node --version 
                     npm --version
                     pwd
                     touch container-yes.txt
