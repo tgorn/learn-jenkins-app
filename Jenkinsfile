@@ -34,4 +34,11 @@ pipeline {
 
         }
     }
+    post { 
+        always {
+            echo 'Cleaning up...'
+            junit 'test-results.xml'
+            cleanupWs()
+        }
+    }
 }
