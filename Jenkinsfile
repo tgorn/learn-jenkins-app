@@ -28,6 +28,7 @@ pipeline {
                     echo "Testing index.html"
                     test  build/index.html
                     echo "Testing npm test"
+                    npm ci
                     npm test
                 '''
             }
