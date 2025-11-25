@@ -47,7 +47,7 @@ pipeline {
         always {
             echo 'Cleaning up...'
             junit 'test-results/junit.xml'
-            cleanupWs()
+            //cleanupWs()
         }
     }
 }
