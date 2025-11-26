@@ -48,7 +48,7 @@ pipeline {
                         docker {
                             image 'mcr.microsoft.com/playwright:v1.56.1-noble'
                             reuseNode true
-                            arg: '-u root:root'
+                            arg '-u root:root'
                         }
                     }
                     steps {
@@ -66,7 +66,7 @@ pipeline {
             }
         }
     }
-       
+
     post { 
         always {
             echo 'Cleaning up...'
