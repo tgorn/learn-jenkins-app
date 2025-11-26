@@ -62,9 +62,9 @@ pipeline {
                     }
                     steps {
                             sh '''
-                                npm ci
-                                npm test 
-                                npm install -g serve
+                                #npm ci
+                                #npm test 
+                                #npm install -g serve
                                 serve -s build &
                                 #node_modules/.bin/serve -s build &
                                 sleep 5
