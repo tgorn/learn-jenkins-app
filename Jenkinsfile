@@ -55,7 +55,7 @@ pipeline {
                 stage('e2e'){
                     agent {
                         docker {
-                            image 'mcr.microsoft.com/playwright:v1.39.0-noble'
+                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
                             reuseNode true
                             args '-u root:root' // to run as root user
                             
