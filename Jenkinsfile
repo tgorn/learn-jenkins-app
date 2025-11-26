@@ -61,7 +61,6 @@ pipeline {
                                 sleep 5
                                 npx playwright test
                             '''
-                        }
                     }
                 }
             }
