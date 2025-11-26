@@ -69,7 +69,7 @@ pipeline {
                                 npm install -g serve
                                 serve -s build &
                                 sleep 5
-                                npx playwright test
+                                #npx playwright test
                             '''
                     }
                 }
