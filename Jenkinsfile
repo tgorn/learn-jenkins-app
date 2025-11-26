@@ -61,7 +61,7 @@ pipeline {
     post { 
         always {
             echo 'Cleaning up...'
-            junit 'test-results/junit.xml'
+            junit 'test-results-jest/junit.xml'
             //cleanupWs()
         }
     }
