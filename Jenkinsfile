@@ -11,7 +11,7 @@ pipeline {
             }
             
             steps {
-                echo "Using docker "
+                echo "Jenkins using docker "
                 sh '''
                     ls -altr
                     node --version
@@ -41,7 +41,6 @@ pipeline {
                 '''
             }
         }
-    }
         stage('e2e'){
             agent {
                 docker {
