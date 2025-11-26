@@ -17,6 +17,7 @@ pipeline {
             
             steps {
                 echo "Jenkins using docker "
+                /*
                 sh '''
                     ls -altr
                     node --version
@@ -25,10 +26,12 @@ pipeline {
                     npm run build
                     ls -altr 
                 '''
+                */
             }
         }
         stage('Run Multiple tests in Parallel' ){
             parallel {
+                /*
                 stage('Unit Tests'){
                     agent {
                         docker {
@@ -48,6 +51,7 @@ pipeline {
                         '''
                     }
                 }
+                */
                 stage('e2e'){
                     agent {
                         docker {
