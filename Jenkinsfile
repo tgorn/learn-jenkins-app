@@ -2,6 +2,11 @@ pipeline {
     agent any
 
     stages {
+        stage('Cleanup Workspace') {
+            steps {
+                cleanupWs() // This will remove all files from the workspace
+            }
+        }
         stage('Build') {
             agent {
                 docker {
