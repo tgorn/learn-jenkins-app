@@ -67,7 +67,7 @@ pipeline {
                                 npm test
                                 npm run build 
                                 npm install -g serve
-                                serve -s build &
+                                node_modules/.bin/serve -s build &
                                 sleep 5
                                 npx playwright test 
                             '''
