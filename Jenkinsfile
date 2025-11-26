@@ -57,7 +57,7 @@ pipeline {
                         docker {
                             image 'mcr.microsoft.com/playwright:v1.56.1-noble'
                             reuseNode true
-                            args '-u root:root' // to run as root user
+                            //rgs '-u root:root' // to run as root user
                             
                         }
                     }
