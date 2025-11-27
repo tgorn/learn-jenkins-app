@@ -98,8 +98,8 @@ pipeline {
                     sh '''
                         npm update
                         npm install --save-dev netlify-cli 
-                        #node_modules/.bin/netlify --version
-                        netlify --version
+                        node_modules/.bin/netlify --version
+                        #netlify --version
                         #netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
                     '''
                 }
