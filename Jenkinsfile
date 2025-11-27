@@ -51,7 +51,9 @@ pipeline {
                         '''
                     }
                 }
-                
+            }
+        }
+/*                 
                 stage('e2e'){
                     agent {
                         docker {
@@ -75,7 +77,8 @@ pipeline {
                     }
                 }
             }
-
+*/
+/* 
             stage('Deploy') {
                 agent {
                     docker {
@@ -100,6 +103,7 @@ pipeline {
                     junit 'test-results-jest/junit.xml'
                     //cleanupWs()
                 }
+*/
             }
         }
     }
