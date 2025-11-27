@@ -97,7 +97,7 @@ pipeline {
                     echo "Jenkins using docker "
                     sh '''
                         npm install netlify-cli 
-                        netlify-cli --version
+                        netlify --version
                         #netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
                     '''
                 }
