@@ -89,7 +89,7 @@ pipeline {
                     docker {
                         image 'node:18-alpine'
                         reuseNode true
-                        args '-u root:root' // to run as root user
+                        //args '-u root:root' // to run as root user
                     }
                 }
         
@@ -97,7 +97,7 @@ pipeline {
                     echo "Jenkins using docker "
                     sh '''
                         npm install netlify-cli 
-                        netlify --version
+                        node_modules/.bin/netlify --version
                         #netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
                     '''
                 }
