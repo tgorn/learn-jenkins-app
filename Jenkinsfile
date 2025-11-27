@@ -90,7 +90,6 @@ pipeline {
                 #netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
             '''
         }
-    }
 
     post { 
         always {
