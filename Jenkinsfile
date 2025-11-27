@@ -17,7 +17,6 @@ pipeline {
             
             steps {
                 echo "Jenkins using docker "
-                /*
                 sh '''
                     ls -altr
                     node --version
@@ -26,7 +25,6 @@ pipeline {
                     npm run build
                     ls -altr 
                 '''
-                */
             }
         }
         stage('Run Multiple tests in Parallel' ){
@@ -86,16 +84,11 @@ pipeline {
         
         steps {
             echo "Jenkins using docker "
-            /*
             sh '''
-                ls -altr
-                node --version
+                npm install netlify-cli -g 
                 npm --version
-                npm ci
-                npm run build
-                ls -altr 
+                #netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
             '''
-            */
         }
     }
 
