@@ -7,8 +7,6 @@ pipeline {
                 cleanupWs() // This will remove all files from the workspace
             }
         }
-*/
-
 /* 
         stage('Build') {
             agent {
