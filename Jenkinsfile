@@ -74,29 +74,31 @@ pipeline {
                 }
             }
 
-        stage('Deploy') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
+            stage('Deploy') {
+                agent {
+                    docker {
+                        image 'node:18-alpine'
+                        reuseNode true
+                    }
+                }
+        
+                steps {
+                    echo "Jenkins using docker "
+                    sh '''
+                        npm install netlify-cli -g 
+                        npm --version
+                        #netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
+                    '''
                 }
             }
-        
-            steps {
-                echo "Jenkins using docker "
-                sh '''
-                    npm install netlify-cli -g 
-                    npm --version
-                    #netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
-                '''
-            }
-        }
 
-    post { 
-        always {
-            echo 'Cleaning up...'
-            junit 'test-results-jest/junit.xml'
-            //cleanupWs()
+            post { 
+                always {
+                    echo 'Cleaning up...'
+                    junit 'test-results-jest/junit.xml'
+                    //cleanupWs()
+                }
+            }
         }
     }
 }
