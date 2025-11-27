@@ -97,7 +97,7 @@ pipeline {
                     echo "Jenkins using docker "
                     sh '''
                         npm install netlify-cli -g 
-                        npm --version
+                        netlify-cli --version
                         #netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
                     '''
                 }
@@ -107,7 +107,7 @@ pipeline {
     post { 
         always {
             echo 'Cleaning up...'
-            junit 'test-results-jest/junit.xml'
+            //junit 'test-results-jest/junit.xml'
             //cleanupWs()
         }
     }
