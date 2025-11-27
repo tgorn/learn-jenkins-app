@@ -97,14 +97,13 @@ pipeline {
                     '''
                 }
         }
+    }
 
-        post { 
-            always {
-                echo 'Cleaning up...'
-                junit 'test-results-jest/junit.xml'
-                //cleanupWs()
-            }
+    post { 
+        always {
+            echo 'Cleaning up...'
+            junit 'test-results-jest/junit.xml'
+            //cleanupWs()
         }
-
     }
 }
