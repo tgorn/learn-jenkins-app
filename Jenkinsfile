@@ -1,7 +1,13 @@
 pipeline {
     agent any
 
-    stages {
+        environment {
+            // Define any environment variables here
+            NETLIFY_AUTH_TOKEN = credentials('netlify-auth-token')
+            NETLIFY_SITE_ID = credentials('f6a0e355-0952-4ca0-af01-a0c378e269e9')
+        }
+
+        stages {
         /* 
         stage('Cleanup Workspace') {
             steps {
@@ -101,6 +107,7 @@ pipeline {
                         node_modules/.bin/netlify --version
                         #netlify --version
                         #netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
+                        echo "Deploying to Netlify : $NETLIFY_SITE_ID"
                     '''
                 }
         }
