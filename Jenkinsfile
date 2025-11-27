@@ -28,7 +28,7 @@ pipeline {
                 '''
             }
         }
-/* 
+
         stage('Run Multiple tests in Parallel' ) {
             parallel {
                 stage('Unit Tests'){
@@ -102,6 +102,5 @@ pipeline {
                 }
             }
         }
-*/
     }
 }
