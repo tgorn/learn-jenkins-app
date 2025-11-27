@@ -96,8 +96,9 @@ pipeline {
                 steps {
                     echo "Jenkins using docker "
                     sh '''
-                        npm install netlify-cli@20.12.2
-                        node_modules/.bin/netlify --version
+                        npm install --save-dev netlify-cli 
+                        #node_modules/.bin/netlify --version
+                        netlify --version
                         #netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
                     '''
                 }
