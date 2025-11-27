@@ -79,8 +79,8 @@ pipeline {
                 }
             }
 */
-/* 
-            stage('Deploy') {
+
+        stage('Deploy') {
                 agent {
                     docker {
                         image 'node:18-alpine'
@@ -96,14 +96,14 @@ pipeline {
                         #netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
                     '''
                 }
-            }
+        }
 
-            post { 
-                always {
-                    echo 'Cleaning up...'
-                    junit 'test-results-jest/junit.xml'
-                    //cleanupWs()
-                }
-*/
+        post { 
+            always {
+                echo 'Cleaning up...'
+                junit 'test-results-jest/junit.xml'
+                //cleanupWs()
+            }
+        }
     }
 }
