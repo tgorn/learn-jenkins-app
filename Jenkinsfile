@@ -102,7 +102,7 @@ pipeline {
                 steps {
                     echo "Jenkins using docker "
                     sh '''
-                        npm update
+                        //npm update
                         npm install --save-dev netlify-cli 
                         node_modules/.bin/netlify --version
                         #netlify --version
