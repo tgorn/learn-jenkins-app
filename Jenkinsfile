@@ -19,7 +19,7 @@ pipeline {
         stage('Build') {
             agent {
                 docker {
-                    image 'node:18-alpine'
+                    image 'node:18'
                     reuseNode true
                     args '-u root:root' // to run as root user
                 }
