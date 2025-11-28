@@ -102,6 +102,7 @@ pipeline {
                 steps {
                     echo "Jenkins using docker "
                     sh '''
+                        echo 'Small Change to trigger deployment'
                         #npm update
                         npm install --save-dev netlify-cli 
                         node_modules/.bin/netlify --version
