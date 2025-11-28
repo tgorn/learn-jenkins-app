@@ -137,7 +137,7 @@ pipeline {
                         #node_modules/.bin/serve -s build &
                         #serve -s build &
                         #sleep 5
-                        npx playwright test 
+                        npx playwright test --reporter=html --project=chromium --config=./playwright.prod.config.js
                 '''
             }
         }
