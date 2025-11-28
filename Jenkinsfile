@@ -114,7 +114,6 @@ pipeline {
                     '''
                 }
         }
-    }
                  
     stage('Prod e2e'){
         environment {
