@@ -144,9 +144,10 @@ pipeline {
     } 
     post { 
          always {
-           echo 'Cleaning up...'
+           echo 'Generating PlayWright HTML Report'
            //junit 'test-results-jest/junit.xml'
            //cleanupWs()
+           publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: true, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'PlayWright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
          }
     }
 }
