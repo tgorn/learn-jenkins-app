@@ -114,36 +114,37 @@ pipeline {
                     '''
                 }
         }
-                 
-    stage('Prod e2e'){
-        environment {
-            CI_ENVIRONMENT_URL = "https://lively-meringue-ae1414.netlify.app/"
-        }
+        
+        stage('Prod e2e'){
 
-        agent {
-            docker {
-                image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-                reuseNode true
-                args '-u root:root' // to run as root user
-                
+            environment {
+                CI_ENVIRONMENT_URL = "https://lively-meringue-ae1414.netlify.app/"
+            }
+
+            agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    reuseNode true
+                    args '-u root:root' // to run as root user
+                }
+            }
+            steps {
+                    sh '''
+                        #npm install -g serve
+                        #node_modules/.bin/serve -s build &
+                        #serve -s build &
+                        #sleep 5
+                        npx playwright test 
+                '''
             }
         }
-        steps {
-                sh '''
-                    #npm install -g serve
-                    #node_modules/.bin/serve -s build &
-                    #serve -s build &
-                    #sleep 5
-                    npx playwright test 
-               '''
-        }
-    }
- 
-    post { 
-        always {
-            echo 'Cleaning up...'
-            //junit 'test-results-jest/junit.xml'
-            //cleanupWs()
+    
+        post { 
+            always {
+                echo 'Cleaning up...'
+                //junit 'test-results-jest/junit.xml'
+                //cleanupWs()
+            }
         }
     }
 }
