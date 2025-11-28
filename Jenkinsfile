@@ -5,6 +5,7 @@ pipeline {
             // Define any environment variables here
             NETLIFY_AUTH_TOKEN = credentials('netlify-token')
             NETLIFY_SITE_ID = ('f6a0e355-0952-4ca0-af01-a0c378e269e9')
+            CI_ENVIRONMENT_URL = "https://lively-meringue-ae1414.netlify.app/'
         }
 
         stages {
@@ -115,7 +116,31 @@ pipeline {
                 }
         }
     }
+                 
+    stage('Prod e2e'){
+        environment {
+            CI_ENVIRONMENT_URL = "https://lively-meringue-ae1414.netlify.app/"
+        }
 
+        agent {
+            docker {
+                image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                reuseNode true
+                args '-u root:root' // to run as root user
+                
+            }
+        }
+        steps {
+                sh '''
+                    #npm install -g serve
+                    #node_modules/.bin/serve -s build &
+                    #serve -s build &
+                    #sleep 5
+                    npx playwright test 
+               '''
+        }
+    }
+ 
     post { 
         always {
             echo 'Cleaning up...'
