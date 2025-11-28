@@ -109,7 +109,7 @@ pipeline {
                         #netlify --version
                         #netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
                         echo "Deploying to Netlify : $NETLIFY_SITE_ID"
-                        #node_modules/.bin/netlify status
+                        node_modules/.bin/netlify status
                         node_modules/.bin/netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
                     '''
                 }
@@ -118,6 +118,8 @@ pipeline {
         stage('Prod e2e'){
 
             environment {
+                NETLIFY_AUTH_TOKEN = credentials('netlify-token')
+                NETLIFY_SITE_ID = ('f6a0e355-0952-4ca0-af01-a0c378e269e9')
                 CI_ENVIRONMENT_URL = "https://lively-meringue-ae1414.netlify.app/"
             }
 
