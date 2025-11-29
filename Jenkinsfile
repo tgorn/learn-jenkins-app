@@ -90,7 +90,7 @@ pipeline {
             }
 */
 
-        stage('Deploy') {
+        stage('Deploy Staging') {
                 agent {
                     docker {
                         image 'node:18'
@@ -115,7 +115,33 @@ pipeline {
                     '''
                 }
         }
+
+        stage('Deploy Production') {
+                agent {
+                    docker {
+                        image 'node:18'
+                        reuseNode true
+                        args '-u root:root' // to run as root user
+                    }
+                }
         
+                steps {
+                    echo "Jenkins using docker "
+                    sh '''
+                        echo 'Small Change to trigger deployment'
+                        #npm update
+                        npm install --save-dev netlify-cli 
+                        node_modules/.bin/netlify --version
+                        #netlify --version
+                        #netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
+                        echo "Deploying to Netlify : $NETLIFY_SITE_ID"
+                        node_modules/.bin/netlify status
+                        node_modules/.bin/netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
+                        #node_modules/.bin/netlify deploy --prod
+                    '''
+                }
+        }
+
         stage('Prod e2e'){
 
             environment {
@@ -142,6 +168,7 @@ pipeline {
             }
         }
     } 
+
     post { 
          always {
            echo 'Generating PlayWright HTML Report'
