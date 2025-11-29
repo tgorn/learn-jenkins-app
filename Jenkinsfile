@@ -115,6 +115,14 @@ pipeline {
                 }
         }
 
+       stage ('Approve'){
+            steps {
+                timeout(time: 1, unit: 'HOURS'){
+                    input cancel: 'Reject Changes', message: 'Do you accept the current state', ok: 'I do accept'
+                }
+            }
+        }
+
         stage('Deploy Production') {
                 agent {
                     docker {
