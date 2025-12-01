@@ -34,12 +34,12 @@ pipeline {
                 steps {
                     echo "Jenkins using docker "
                     sh '''
-                        ls -altr
+                        #ls -altr
                         node --version
                         npm --version
                         npm ci
                         npm run build
-                        ls -altr 
+                        #ls -altr 
                     '''
                 }
             }
