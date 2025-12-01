@@ -169,15 +169,11 @@ pipeline {
                         echo "Jenkins using docker "
                         sh '''
                             echo 'Small Change to trigger deployment'
-                            #npm update
                             npm install --save-dev netlify-cli 
                             node_modules/.bin/netlify --version
-                            #netlify --version
-                            #netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
                             echo "Deploying to Production : $NETLIFY_SITE_ID"
                             node_modules/.bin/netlify status
                             node_modules/.bin/netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
-                            #node_modules/.bin/netlify deploy --prod 
                         '''
                     }
             }
@@ -199,10 +195,6 @@ pipeline {
                 }
                 steps {
                         sh '''
-                            #npm install -g serve
-                            #node_modules/.bin/serve -s build &
-                            #serve -s build &
-                            #sleep 5
                             npx playwright test --reporter=html --project=chromium --config=./playwright.config.js
                     '''
                 }
@@ -214,7 +206,7 @@ pipeline {
            echo 'Generating PlayWright HTML Report'
            //junit 'test-results-jest/junit.xml'
            //cleanupWs()
-           publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: true, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'PlayWright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+           publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: true, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'PlayWright HTML Report - Prod', reportTitles: '', useWrapperFileDirectly: true])
          }
     }
 }
