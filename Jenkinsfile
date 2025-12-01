@@ -16,27 +16,27 @@ pipeline {
         }
         */
  
-        stage('Build') {
-            agent {
-                docker {
-                    image 'node:18'
-                    reuseNode true
-                    args '-u root:root' // to run as root user
+            stage('Build') {
+                agent {
+                    docker {
+                        image 'node:18'
+                        reuseNode true
+                        args '-u root:root' // to run as root user
+                    }
+                }
+                
+                steps {
+                    echo "Jenkins using docker "
+                    sh '''
+                        ls -altr
+                        node --version
+                        npm --version
+                        npm ci
+                        npm run build
+                        ls -altr 
+                    '''
                 }
             }
-            
-            steps {
-                echo "Jenkins using docker "
-                sh '''
-                    ls -altr
-                    node --version
-                    npm --version
-                    npm ci
-                    npm run build
-                    ls -altr 
-                '''
-            }
-        }
 
 /* 
         stage('Run Multiple tests in Parallel' ) {
@@ -90,123 +90,123 @@ pipeline {
             }
 */
 
-        stage('Deploy Staging') {
-                agent {
-                    docker {
-                        image 'node:18'
-                        reuseNode true
-                        args '-u root:root' // to run as root user
-                    }
-                }
-        
-                steps {
-                    echo "Jenkins using docker "
-                    sh '''
-                        echo 'Small Change to trigger deployment'
-                        #npm update
-                        npm install --save-dev netlify-cli node-jq
-                        node_modules/.bin/netlify --version
-                        #netlify --version
-                        #netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
-                        echo "Deploying to Staging : $NETLIFY_SITE_ID"
-                        node_modules/.bin/netlify status
-                        node_modules/.bin/netlify deploy --dir=build --json --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN > netlify-deploy.json
-                        echo "Extracting deploy URL"
-                        node_modules/.bin/node-jq -r '.deploy_url' < netlify-deploy.json > staging_url.txt
-                        echo "Staging URL : "
-                        cat staging_url.txt '''
-                        script {
-                            env.STAGING_URL = sh(script: "node_modules/.bin/node-jq -r '.deploy_url' < netlify-deploy.json", returnStdout: true)
-                        }
-                }
-
-                stage('Stage e2e'){
-
-                    environment {
-                        NETLIFY_AUTH_TOKEN = credentials('netlify-token')
-                        NETLIFY_SITE_ID = ('f6a0e355-0952-4ca0-af01-a0c378e269e9')
-                        //CI_ENVIRONMENT_URL = "https://lively-meringue-ae1414.netlify.app/"
-                        CI_ENVIRONMENT_URL = "${env.STAGING_URL}"
-                    }
-
+            stage('Deploy Staging') {
                     agent {
                         docker {
-                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                            image 'node:18'
                             reuseNode true
                             args '-u root:root' // to run as root user
                         }
                     }
+            
                     steps {
-                            sh '''
-                                #npm install -g serve
-                                #node_modules/.bin/serve -s build &
-                                #serve -s build &
-                                #sleep 5
-                                npx playwright test --reporter=html --project=chromium --config=./playwright.config.js
-                        '''
+                        echo "Jenkins using docker "
+                        sh '''
+                            echo 'Small Change to trigger deployment'
+                            #npm update
+                            npm install --save-dev netlify-cli node-jq
+                            node_modules/.bin/netlify --version
+                            #netlify --version
+                            #netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
+                            echo "Deploying to Staging : $NETLIFY_SITE_ID"
+                            node_modules/.bin/netlify status
+                            node_modules/.bin/netlify deploy --dir=build --json --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN > netlify-deploy.json
+                            echo "Extracting deploy URL"
+                            node_modules/.bin/node-jq -r '.deploy_url' < netlify-deploy.json > staging_url.txt
+                            echo "Staging URL : "
+                            cat staging_url.txt '''
+                            script {
+                                env.STAGING_URL = sh(script: "node_modules/.bin/node-jq -r '.deploy_url' < netlify-deploy.json", returnStdout: true)
+                            }
                     }
-                }
-       }
-
-       stage ('Approve'){
-            steps {
-                timeout(time: 1, unit: 'HOURS'){
-                    input cancel: 'Reject Changes', message: 'Do you accept the current state', ok: 'I do accept'
-                }
             }
-        }
 
-        stage('Deploy Production') {
+            stage('Stage e2e'){
+
+                environment {
+                    NETLIFY_AUTH_TOKEN = credentials('netlify-token')
+                    NETLIFY_SITE_ID = ('f6a0e355-0952-4ca0-af01-a0c378e269e9')
+                    //CI_ENVIRONMENT_URL = "https://lively-meringue-ae1414.netlify.app/"
+                    CI_ENVIRONMENT_URL = "${env.STAGING_URL}"
+                }
+
                 agent {
                     docker {
-                        image 'node:18'
+                        image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
                         reuseNode true
                         args '-u root:root' // to run as root user
                     }
                 }
-        
                 steps {
-                    echo "Jenkins using docker "
-                    sh '''
-                        echo 'Small Change to trigger deployment'
-                        #npm update
-                        npm install --save-dev netlify-cli 
-                        node_modules/.bin/netlify --version
-                        #netlify --version
-                        #netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
-                        echo "Deploying to Production : $NETLIFY_SITE_ID"
-                        node_modules/.bin/netlify status
-                        node_modules/.bin/netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
-                        #node_modules/.bin/netlify deploy --prod 
+                        sh '''
+                            #npm install -g serve
+                            #node_modules/.bin/serve -s build &
+                            #serve -s build &
+                            #sleep 5
+                            npx playwright test --reporter=html --project=chromium --config=./playwright.config.js
                     '''
                 }
-        }
-
-        stage('Prod e2e'){
-
-            environment {
-                NETLIFY_AUTH_TOKEN = credentials('netlify-token')
-                NETLIFY_SITE_ID = ('f6a0e355-0952-4ca0-af01-a0c378e269e9')
-                CI_ENVIRONMENT_URL = "https://lively-meringue-ae1414.netlify.app/"
             }
 
-            agent {
-                docker {
-                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-                    reuseNode true
-                    args '-u root:root' // to run as root user
+            stage ('Approve'){
+                    steps {
+                        timeout(time: 1, unit: 'HOURS'){
+                            input cancel: 'Reject Changes', message: 'Do you accept the current state', ok: 'I do accept'
+                        }
+                    }
+                }
+
+            stage('Deploy Production') {
+                    agent {
+                        docker {
+                            image 'node:18'
+                            reuseNode true
+                            args '-u root:root' // to run as root user
+                        }
+                    }
+            
+                    steps {
+                        echo "Jenkins using docker "
+                        sh '''
+                            echo 'Small Change to trigger deployment'
+                            #npm update
+                            npm install --save-dev netlify-cli 
+                            node_modules/.bin/netlify --version
+                            #netlify --version
+                            #netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
+                            echo "Deploying to Production : $NETLIFY_SITE_ID"
+                            node_modules/.bin/netlify status
+                            node_modules/.bin/netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
+                            #node_modules/.bin/netlify deploy --prod 
+                        '''
+                    }
+            }
+
+            stage('Prod e2e'){
+
+                environment {
+                    NETLIFY_AUTH_TOKEN = credentials('netlify-token')
+                    NETLIFY_SITE_ID = ('f6a0e355-0952-4ca0-af01-a0c378e269e9')
+                    CI_ENVIRONMENT_URL = "https://lively-meringue-ae1414.netlify.app/"
+                }
+
+                agent {
+                    docker {
+                        image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                        reuseNode true
+                        args '-u root:root' // to run as root user
+                    }
+                }
+                steps {
+                        sh '''
+                            #npm install -g serve
+                            #node_modules/.bin/serve -s build &
+                            #serve -s build &
+                            #sleep 5
+                            npx playwright test --reporter=html --project=chromium --config=./playwright.config.js
+                    '''
                 }
             }
-            steps {
-                    sh '''
-                        #npm install -g serve
-                        #node_modules/.bin/serve -s build &
-                        #serve -s build &
-                        #sleep 5
-                        npx playwright test --reporter=html --project=chromium --config=./playwright.config.js
-                '''
-            }
-        }
     } 
 
     post { 
