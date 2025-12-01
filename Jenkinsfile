@@ -146,6 +146,12 @@ pipeline {
                             npx playwright test --reporter=html --project=chromium --config=./playwright.config.js
                     '''
                 }
+                post { 
+                    always {
+                        echo 'Generating PlayWright HTML Report For Staging'
+                        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: true, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'PlayWright HTML Report - Stage', reportTitles: '', useWrapperFileDirectly: true])
+                    }
+                }
             }
 
             stage ('Approve'){
