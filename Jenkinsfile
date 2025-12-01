@@ -99,9 +99,10 @@ pipeline {
             stage('Deploy Staging') {
                     agent {
                         docker {
-                            image 'node:18'
-                            reuseNode true
-                            args '-u root:root' // to run as root user
+                            image 'my-playwright-netlify-app'
+                            // image 'node:18'
+                            // reuseNode true
+                            // args '-u root:root' // to run as root user
                         }
                     }
             
@@ -109,14 +110,17 @@ pipeline {
                         echo "Jenkins using docker "
                         sh '''
                             echo 'Small Change to trigger deployment'
-                            #npm update
-                            npm install --save-dev netlify-cli node-jq
-                            node_modules/.bin/netlify --version
-                            #netlify --version
-                            #netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
+                            # npm install --save-dev netlify-cli node-jq
+                            #node_modules/.bin/netlify --version
+                            netlify --version
+                            
                             echo "Deploying to Staging : $NETLIFY_SITE_ID"
-                            node_modules/.bin/netlify status
-                            node_modules/.bin/netlify deploy --dir=build --json --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN > netlify-deploy.json
+                            netlify status
+                            
+                            #node_modules/.bin/netlify deploy --dir=build --json --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN > netlify-deploy.json
+                            netlify deploy --dir=build --json --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN > netlify-deploy.json
+                            
+                            # Variable  extraction 
                             echo "Extracting deploy URL"
                             node_modules/.bin/node-jq -r '.deploy_url' < netlify-deploy.json > staging_url.txt
                             echo "Staging URL : "
