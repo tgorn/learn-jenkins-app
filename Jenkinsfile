@@ -116,7 +116,7 @@ pipeline {
                         echo "Staging URL : "
                         cat staging_url.txt '''
                         script {
-                            env.STAGING_URL = sh(script "node_modules/.bin/node-jq -r '.deploy_url' < netlify-deploy.json", returnStdout: true")
+                            env.STAGING_URL = sh(script: "node_modules/.bin/node-jq -r '.deploy_url' < netlify-deploy.json", returnStdout: true")
                         }
                 }
 
