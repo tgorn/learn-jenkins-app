@@ -116,9 +116,37 @@ pipeline {
                         echo "Staging URL : "
                         cat staging_url.txt '''
                         script {
-                            env.STAGING_URL = sh.(script "node_modules/.bin/node-jq -r '.deploy_url' < netlify-deploy.json", returnStdout: true")
+                            env.STAGING_URL = sh(script "node_modules/.bin/node-jq -r '.deploy_url' < netlify-deploy.json", returnStdout: true")
                         }
                 }
+
+                stage('Stage e2e'){
+
+                    environment {
+                        NETLIFY_AUTH_TOKEN = credentials('netlify-token')
+                        NETLIFY_SITE_ID = ('f6a0e355-0952-4ca0-af01-a0c378e269e9')
+                        //CI_ENVIRONMENT_URL = "https://lively-meringue-ae1414.netlify.app/"
+                        CI_ENVIRONMENT_URL = "${env.STAGING_URL}"
+                    }
+
+                    agent {
+                        docker {
+                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                            reuseNode true
+                            args '-u root:root' // to run as root user
+                        }
+                    }
+                    steps {
+                            sh '''
+                                #npm install -g serve
+                                #node_modules/.bin/serve -s build &
+                                #serve -s build &
+                                #sleep 5
+                                npx playwright test --reporter=html --project=chromium --config=./playwright.config.js
+                        '''
+                    }
+                }
+       }
 
        stage ('Approve'){
             steps {
