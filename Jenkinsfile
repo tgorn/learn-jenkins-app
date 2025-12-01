@@ -198,9 +198,16 @@ pipeline {
                             npx playwright test --reporter=html --project=chromium --config=./playwright.config.js
                     '''
                 }
+ 
+                post { 
+                    always {
+                        echo 'Generating PlayWright HTML Report For Prod'
+                        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: true, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'PlayWright HTML Report - Prod', reportTitles: '', useWrapperFileDirectly: true])
+                    }
+                }
             }
     } 
-
+/* 
     post { 
          always {
            echo 'Generating PlayWright HTML Report'
@@ -209,4 +216,5 @@ pipeline {
            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: true, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'PlayWright HTML Report - Prod', reportTitles: '', useWrapperFileDirectly: true])
          }
     }
+*/
 }
