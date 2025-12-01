@@ -172,9 +172,9 @@ pipeline {
             stage('Deploy Production') {
                     agent {
                         docker {
-                            image 'node:18'
-                            reuseNode true
-                            args '-u root:root' // to run as root user
+                            image 'my-playwright-netlify-app'
+                            // reuseNode true
+                            // args '-u root:root' // to run as root user
                         }
                     }
             
@@ -182,11 +182,15 @@ pipeline {
                         echo "Jenkins using docker "
                         sh '''
                             echo 'Small Change to trigger deployment'
-                            npm install --save-dev netlify-cli 
-                            node_modules/.bin/netlify --version
+                            # npm install --save-dev netlify-cli 
+                            #node_modules/.bin/netlify --version
+                           
+                            netlify --version
+                            
                             echo "Deploying to Production : $NETLIFY_SITE_ID"
-                            node_modules/.bin/netlify status
-                            node_modules/.bin/netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
+                            netlify status
+                            
+                            netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
                         '''
                     }
             }
@@ -201,9 +205,7 @@ pipeline {
 
                 agent {
                     docker {
-                        image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-                        reuseNode true
-                        args '-u root:root' // to run as root user
+                        image 'my-playwright-netlify-app'
                     }
                 }
                 steps {
@@ -220,14 +222,4 @@ pipeline {
                 }
             }
     } 
-/* 
-    post { 
-         always {
-           echo 'Generating PlayWright HTML Report'
-           //junit 'test-results-jest/junit.xml'
-           //cleanupWs()
-           publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: true, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'PlayWright HTML Report - Prod', reportTitles: '', useWrapperFileDirectly: true])
-         }
-    }
-*/
 }
