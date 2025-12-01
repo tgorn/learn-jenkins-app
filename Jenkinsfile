@@ -104,14 +104,16 @@ pipeline {
                     sh '''
                         echo 'Small Change to trigger deployment'
                         #npm update
-                        npm install --save-dev netlify-cli 
+                        npm install --save-dev netlify-cli node-jq
                         node_modules/.bin/netlify --version
                         #netlify --version
                         #netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
                         echo "Deploying to Staging : $NETLIFY_SITE_ID"
                         node_modules/.bin/netlify status
                         node_modules/.bin/netlify deploy --dir=build --json --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
-                    '''
+                        node_modules/.bin/node-jq -r '.deploy_url' < netlify-deploy.json > staging_url.txt
+                        echo "Staging URL : "
+                        cat staging_url.txt '''
                 }
         }
 
