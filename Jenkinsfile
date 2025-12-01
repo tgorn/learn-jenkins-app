@@ -16,7 +16,12 @@ pipeline {
             }
         }
         */
- 
+            stage('Docker'){
+                steps {
+                    sh 'docker build -t my-playwright-netlify-app .' 
+                    }       
+            }
+
             stage('Build') {
                 agent {
                     docker {
@@ -133,17 +138,14 @@ pipeline {
 
                 agent {
                     docker {
-                        image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                        //image 'mcr.microsoft.com/playwright:v1.39.0-jammy' 
+                        image 'my-playwright-netlify-app'
                         reuseNode true
                         args '-u root:root' // to run as root user
                     }
                 }
                 steps {
                         sh '''
-                            #npm install -g serve
-                            #node_modules/.bin/serve -s build &
-                            #serve -s build &
-                            #sleep 5
                             npx playwright test --reporter=html --project=chromium --config=./playwright.config.js
                     '''
                 }
