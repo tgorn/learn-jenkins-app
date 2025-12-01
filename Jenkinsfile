@@ -102,14 +102,14 @@ pipeline {
                             image 'my-playwright-netlify-app'
                             // image 'node:18'
                             // reuseNode true
-                            // args '-u root:root' // to run as root user
+                            args '-u root:root' // to run as root user
                         }
                     }
             
                     steps {
                         echo "Jenkins using docker "
                         sh '''
-                            echo 'Small Change to trigger deployment'
+                            #echo 'Small Change to trigger deployment'
                             # npm install --save-dev netlify-cli node-jq
                             #node_modules/.bin/netlify --version
                             netlify --version
